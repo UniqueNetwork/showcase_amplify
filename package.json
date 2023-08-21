@@ -1,0 +1,24 @@
+{
+  "name": "showcase_amplify",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@inquirer/confirm": "^2.0.9",
+    "@nuxt/devtools": "latest",
+    "@types/node": "^18.17.3",
+    "nuxt": "^3.6.5"
+  },
+  "dependencies": {
+    "@unique-nft/sdk": "^0.2.19",
+    "@unique-nft/sr25519": "^0.0.1",
+    "commander": "^11.0.0",
+    "dotenv": "^16.3.1",
+    "tsx": "^3.12.7"
+  }
+}
