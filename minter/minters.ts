@@ -1,12 +1,40 @@
 import Sdk from '@unique-nft/sdk'
+import {getMonthString} from "~/utils";
 
 export const createArtistNFTCollection = async (sdk: Sdk) => {
   const collectionCreationResult = await sdk.collection.create({
     name: 'Marco Brun',
     description: 'Marco Brun Artist NFT Collection',
     tokenPrefix: 'MARCO',
-    //todo: schema
-    //schema: {}
+    schema: {
+      schemaName: 'unique',
+      schemaVersion: '1.0.0',
+      image: {
+        urlTemplate: 'https://ipfs.uniquenetwork.dev/ipfs/{infix}'
+      },
+      coverPicture: {
+        ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
+      },
+      attributesSchemaVersion: '1.0.0',
+      attributesSchema: {
+        0: {
+          name: {_: 'Artist'},
+          type: 'string',
+          optional: false,
+          isArray: false,
+        },
+        1: {
+          name: {_: 'Kind'},
+          type: 'string',
+          optional: false,
+          isArray: false,
+          enumValues: {
+            0: {_: 'Follower Badge NFT'},
+            1: {_: 'Some another NFT'},
+          }
+        }
+      }
+    }
   })
 
   const collectionId = collectionCreationResult.parsed?.collectionId
@@ -14,10 +42,28 @@ export const createArtistNFTCollection = async (sdk: Sdk) => {
   return {collectionId}
 }
 
+export const createArtistNFTForAddress = async (sdk: Sdk, collectionId: number, address: string) => {
+  const tokenCreationResult = await sdk.token.create({
+    collectionId,
+    address,
+    data: {
+      image: {
+        ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
+      },
+      encodedAttributes: {
+        0: {_: 'Marco Brun'},
+        1: 0, // for 'Follower Badge NFT' enum value
+      },
+    }
+  })
+  if (!tokenCreationResult.parsed?.tokenId) throw tokenCreationResult.error
+  return tokenCreationResult.parsed!
+}
+
 export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, amount: 10000}) => {
   const amount = options.decimals * options.amount
   if (amount > Number.MAX_SAFE_INTEGER) {
-    // integer is the limitation of the SDK, it doesnt takes bigint according to the typings
+    // integer is the limitation of the SDK, it doesn't take bigint according to the typings
     throw new Error('amount is too big')
   }
 
@@ -63,8 +109,25 @@ export const createFollowingRFTCollection = async (sdk: Sdk) => {
     name: 'Marco followers',
     description: 'Macro Brun followers badges',
     tokenPrefix: 'MARCO_F',
-    //todo: schema
-    //schema: {}
+    schema: {
+      schemaName: 'unique',
+      schemaVersion: '1.0.0',
+      image: {
+        urlTemplate: 'https://ipfs.uniquenetwork.dev/ipfs/{infix}'
+      },
+      coverPicture: {
+        ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
+      },
+      attributesSchemaVersion: '1.0.0',
+      attributesSchema: {
+        0: {
+          name: {_: 'Month'},
+          type: 'string', // '2023-08' for August 2023
+          optional: false,
+          isArray: false,
+        }
+      }
+    }
   })
 
   const collectionId = collectionCreationResult.parsed?.collectionId
@@ -76,8 +139,14 @@ export const mintFollowingRFTTokenForMonth = async (sdk: Sdk, collectionId: numb
   const tokenCreationResult = await sdk.refungible.createToken({
     collectionId,
 
-    //todo: data
-    //data: {}
+    data: {
+      image: {
+        ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
+      },
+      attributes: {
+        0: {_: getMonthString()},
+      }
+    },
     amount: 1000000,
   })
   if (!tokenCreationResult.parsed?.tokenId) throw tokenCreationResult.error
