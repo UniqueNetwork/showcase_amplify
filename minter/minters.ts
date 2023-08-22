@@ -67,6 +67,8 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
     throw new Error('amount is too big')
   }
 
+  const address = sdk.options.account?.address!
+
   const collectionCreationResult = await sdk.fungible.createCollection({
     mode: 'Fungible',
     decimals: options.decimals,
@@ -75,8 +77,9 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
     description: 'AMPX FT Collection',
     tokenPrefix: 'AMPX',
     sponsorship: {
-      address: sdk.options.account?.address,
-    } as any,
+      address,
+      isConfirmed: false,
+    }
   })
 
   const collectionId = collectionCreationResult.parsed?.collectionId
@@ -90,7 +93,11 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
       {nonce}
     ),
     sdk.fungible.addTokens(
-      {collectionId, amount},
+      {
+        collectionId,
+        amount,
+        recipient: address,
+      },
       {nonce: nonce + 1}
     )
   ])
@@ -143,7 +150,7 @@ export const mintFollowingRFTTokenForMonth = async (sdk: Sdk, collectionId: numb
       image: {
         ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
       },
-      attributes: {
+      encodedAttributes: {
         0: {_: getMonthString()},
       }
     },

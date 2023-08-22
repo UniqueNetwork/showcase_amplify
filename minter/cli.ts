@@ -20,7 +20,7 @@ const main = async () => {
     )
     .parse()
     .opts<{
-      createCollections: boolean
+      createCollections?: boolean
     }>()
 
   if (options.createCollections) {
@@ -37,9 +37,16 @@ const main = async () => {
     }
 
     const artistNFTResult = await createArtistNFTCollection(sdk)
+    console.log(`Artist NFT collection created, id ${artistNFTResult.collectionId}`)
+
     const ampxFTResult = await createAmpxFTCollection(sdk)
+    console.log(`AMPX FT collection created, id ${ampxFTResult.collectionId}`)
+
     const followingRFTResult = await createFollowingRFTCollection(sdk)
+    console.log(`Following RFT collection created, id ${followingRFTResult.collectionId}`)
+
     const followingRFTToken = await mintFollowingRFTTokenForMonth(sdk, followingRFTResult.collectionId)
+    console.log(`Following RFT token minted, id ${followingRFTToken.tokenId}`)
 
     console.log(`
 ARTIST_NFT_COLLECTION_ID=${artistNFTResult.collectionId}
