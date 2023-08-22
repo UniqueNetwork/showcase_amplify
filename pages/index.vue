@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {useUniqueSdk} from '~/composables/useUniqueSdk'
+
 enum STATE {
   NOT_LOGGED_IN,
   NOT_FOLLOWING,
@@ -7,11 +9,14 @@ enum STATE {
 }
 
 const state = ref(STATE.NOT_LOGGED_IN)
+const sdk = useUniqueSdk()
+console.log('Unique SDK is connected to', sdk.options.baseUrl)
 
 const requestMain = async () => {
   const res = await (await fetch('/api/main?address=123')).json()
   console.log(res)
 }
+
 </script>
 
 <template>

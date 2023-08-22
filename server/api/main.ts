@@ -1,12 +1,13 @@
 import {getSdk} from '~/minter/utils'
 import * as dotenv from 'dotenv'
-import {createError, H3Error} from "h3";
+import {createError} from "h3";
 import {createArtistNFTForAddress} from "~/minter/minters";
 
 dotenv.config()
 
 export default defineEventHandler(async (event) => {
   const sdk = getSdk()
+  if (!sdk) throw createError({statusCode: 500, statusText: 'SDK_NOT_DEFINED'})
 
   const collectionId = parseInt(process.env.ARTIST_NFT_COLLECTION_ID || '', 10)
   if (isNaN(collectionId)) {
