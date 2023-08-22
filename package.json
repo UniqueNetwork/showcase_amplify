@@ -19,6 +19,7 @@
     "@unique-nft/sr25519": "^0.0.1",
     "@unique-nft/utils": "^0.3.14",
     "@vueuse/core": "^10.3.0",
+    "bootstrap": "^5.3.1",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "ethers": "5",
