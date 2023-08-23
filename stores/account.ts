@@ -1,12 +1,12 @@
-import { ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import {Sr25519Account} from '@unique-nft/sr25519'
-import { STATE, useAppStateStore } from './state';
+import { Wallet, utils } from 'ethers';
+
 
 export interface IAccount {
   address: string;
   mnemonic: string;
+  private: string;
   email: string;
 }
 
@@ -26,12 +26,14 @@ export const useAccountStore = defineStore('account-store', () => {
   )
 
   const signIn = (email: string) => {
-    const mnemonic = Sr25519Account.generateMnemonic()
-    const { address } = Sr25519Account.fromUri(mnemonic)
+    const { address, mnemonic, privateKey } = Wallet.fromMnemonic(
+      utils.entropyToMnemonic(utils.randomBytes(32))
+    )
 
     account.value = {
       address,
-      mnemonic,
+      mnemonic: mnemonic.phrase,
+      private: privateKey,
       email,
     }
   }

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { useAccountStore } from '../stores/account'
+
 const email = ref('')
 
 const accountStore = useAccountStore()

@@ -35,11 +35,11 @@
     </div>
   </div>
   <div id="g_id_onload"
-            data-client_id="317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com"
-            data-context="signin"
-            data-ux_mode="popup"
-            data-callback="onSignUpDone"
-            data-auto_prompt="false">
-        </div>
+    data-client_id="317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com"
+    data-context="signin"
+    data-ux_mode="popup"
+    data-callback="onSignUpDone"
+    data-auto_prompt="false">
+  </div>
   </header>
 </template>

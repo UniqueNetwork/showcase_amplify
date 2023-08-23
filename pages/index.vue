@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAccountStore } from '../stores/account'
 import { useUniqueSdk } from '~/composables/useUniqueSdk'
 
