@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 
 const emit = defineEmits<{
-  (e: 'sign-in', email: string): void
+  (e: 'signIn', email: string): void
 }>()
 
 const email = ref('')

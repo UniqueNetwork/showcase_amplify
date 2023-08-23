@@ -38,13 +38,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  auth: {
-    strategies: {
-      google: {
-        clientId: '317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com'
-      },
-    }
-  }
 })
 
 function warn(message: string, options: any) {

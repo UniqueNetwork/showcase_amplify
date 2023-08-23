@@ -2,7 +2,6 @@ import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { Wallet, utils } from 'ethers';
 
-
 export interface IAccount {
   address: string;
   mnemonic: string;
