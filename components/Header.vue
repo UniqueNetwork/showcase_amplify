@@ -15,35 +15,49 @@ import { useAccountStore } from '../stores/account'
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-
         </ul>
 
-        <div class="text-end">
+        <div class="col-12 col-lg-auto">
           <button v-if="!accountStore.account" 
             type="button" class="btn btn-warning" 
             data-bs-toggle="modal" data-bs-target="#loginModal"
           >
             Sign-up
           </button>
-          <div v-if="!!accountStore.account" class="d-flex text-muted gap-2">
-            <svg class="bd-placeholder-img flex-shrink-0 rounded" width="32" height="32" 
-              xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" 
-              preserveAspectRatio="xMidYMid slice" focusable="false">
-              <rect width="100%" height="100%" fill="#007bff"></rect>
-            </svg>
-            <div class="me-2 mb-0 small lh-sm text-white d-flex justify-content-start flex-column">
-              <strong class="text-start">{{accountStore.account?.email}}</strong>
-              <div class="text-white-50"> {{accountStore.account.address}}</div>
+          <div v-if="!!accountStore.account" class="d-flex flex-wrap text-muted gap-2 align-items-center justify-content-start">
+            <div class="d-flex text-muted gap-2 align-items-center justify-content-start">
+              <svg class="bd-placeholder-img flex-shrink-0 rounded" width="32" height="32" 
+                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" 
+                preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#007bff"></rect>
+              </svg>
+              <div class="me-2 mb-0 small lh-sm text-white d-flex justify-content-start flex-column">
+                <strong class="text-start">{{accountStore.account?.email}}</strong>
+                <div class="row vw-sm-100">
+                  <div class="text-muted text-white-50 text-truncate ">
+                    {{accountStore.account.address}}
+                  </div>
+                </div>
+              </div>
             </div>
             <button
-              type="button" class="btn btn-secondary" 
+              type="button" class="btn btn-secondary col-12 col-md-auto" 
               @click="accountStore.signOut"
             >
               Log out
             </button>
           </div>
+          
+
         </div>
       </div>
     </div>
   </header>
 </template>
+<style scoped lang="scss">
+.vw-sm-100 {
+  @media screen and (max-width: 578px) {
+    width: calc(100vw - 76px);
+  }
+}
+</style>

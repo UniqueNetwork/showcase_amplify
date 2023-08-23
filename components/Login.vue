@@ -1,36 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 const emit = defineEmits<{
   (e: 'signIn', email: string): void
 }>()
 
 const email = ref('')
-
-const handleCredentialResponse = () => {
-  //TODO: sign-in with google
-}
-
-onMounted(() => {
-  // @ts-ignore
-  window.google.accounts.id.initialize({
-        client_id: '317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com',
-        callback: handleCredentialResponse,
-        context: 'signin'
-      })
-  // @ts-ignore
-  google.accounts.id.renderButton(
-    document.getElementById('googleButton'),
-    { 
-      type: 'standard',
-      size: 'large',
-      text: 'signin_with',
-      shape: 'rectangular',
-      logo_alignment: 'center',
-      width: 250
-    }
-  )
-})
 </script>
 <template>
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -44,23 +19,6 @@ onMounted(() => {
           <div class="d-flex flex-wrap align-items-center mb-4 form-signin container" >
             <label for="floatingInput" class="form-label">Email address</label>
             <input type="email" class="form-control" id="floatingInput" v-model="email"  placeholder="name@example.com"/>
-          </div>
-          <div class="d-flex flex-wrap align-items-center justify-content-center" >
-            <div id="g_id_onload"
-              data-client_id="317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com"
-              data-context="signin"
-              data-ux_mode="popup"
-              data-callback="onSignUpDone"
-              data-auto_prompt="false">
-            </div>
-            <div id="googleButton" class="g_id_signin"
-              data-type="standard"
-              data-shape="rectangular"
-              data-theme="outline"
-              data-text="signin_with"
-              data-size="large"
-              data-logo_alignment="left">
-            </div>
           </div>
         </div>
         <div class="modal-footer">

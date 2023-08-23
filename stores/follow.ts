@@ -20,12 +20,7 @@ export const useFollowingsStore = defineStore('followings', () => {
     }
   )
 
-  const addFollowing = (newFollowing: IFollowing) =>{
-    following.value = newFollowing
-  }
-
   return {
     following,
-    addFollowing,
   }
 })
