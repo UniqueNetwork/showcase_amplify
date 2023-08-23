@@ -1,11 +1,18 @@
 import Sdk from '@unique-nft/sdk'
 import {getMonthString} from "~/utils";
+import {getNonce} from "~/minter/utils";
+import {add} from "@noble/hashes/_u64";
 
 export const createArtistNFTCollection = async (sdk: Sdk) => {
   const collectionCreationResult = await sdk.collection.create({
     name: 'Marco Brun',
     description: 'Marco Brun Artist NFT Collection',
     tokenPrefix: 'MARCO',
+    permissions: {
+      nesting: {
+        collectionAdmin: true,
+      },
+    },
     schema: {
       schemaName: 'unique',
       schemaVersion: '1.0.0',
@@ -45,7 +52,7 @@ export const createArtistNFTCollection = async (sdk: Sdk) => {
 export const createArtistNFTForAddress = async (sdk: Sdk, collectionId: number, address: string) => {
   const tokenCreationResult = await sdk.token.create({
     collectionId,
-    address,
+    owner: address,
     data: {
       image: {
         ipfsCid: 'Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw',
@@ -85,7 +92,7 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
   const collectionId = collectionCreationResult.parsed?.collectionId
   if (!collectionId) throw collectionCreationResult.error
 
-  const nonce = (await sdk.common.getNonce({address: sdk.options.account?.address!})).nonce
+  const nonce = await getNonce(sdk)
 
   const [confirmSponsorshipResult, mintResult] = await Promise.all([
     sdk.collection.confirmSponsorship(

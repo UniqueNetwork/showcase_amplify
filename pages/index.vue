@@ -28,10 +28,15 @@ watch(accountStore, () => {
 const sdk = useUniqueSdk()
 console.log('Unique SDK is connected to', sdk.options.baseUrl)
 
-const requestMain = async () => {
-  const res = await (await fetch('/api/main?address=123')).json()
-  console.log(res)
-}
+const followRequest = useAsyncData(async () => {
+  if (!accountStore.account) return
+  const response = await fetch(`/api/getArtistNft?address=${accountStore.account.address}`)
+  const result = await response.json()
+  console.log(result)
+  return result
+}, {
+  immediate: false,
+})
 
 </script>
 
@@ -46,14 +51,14 @@ const requestMain = async () => {
         <h1 class="display-5 fw-bold lh-1 mb-3">Marco Brun</h1>
         <p class="lead">Marko Bruno, a name that ignites curiosity and wonder, is an artist whose work resides at the intersection of abstract expressionism and surrealism. With an aura of mystery surrounding his identity, Bruno's captivating paintings invite viewers into a world where colors and shapes converse in a dance of emotion. Each canvas presents a puzzle, where vibrant hues coalesce with intricate details, prompting contemplation of the deeper narrative beneath. Bruno's artistry, though shrouded in enigma, leaves an indelible impression that challenges artistic conventions and invites us to explore the limitless realm of imagination.</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <button v-if="state === STATE.NOT_LOGGED_IN" 
-            class="btn btn-warning btn-lg px-4 me-md-2" type="button" 
+          <button v-if="state === STATE.NOT_LOGGED_IN"
+            class="btn btn-warning btn-lg px-4 me-md-2" type="button"
             data-bs-toggle="modal" data-bs-target="#loginModal"
           >
             Sign-up for follow
           </button>
-          <button v-if="state === STATE.NOT_FOLLOWING" 
-            class="btn btn-warning btn-lg px-4 me-md-2" type="button" 
+          <button v-if="state === STATE.NOT_FOLLOWING"
+            class="btn btn-warning btn-lg px-4 me-md-2" type="button"
           >
             Follow
           </button>

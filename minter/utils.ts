@@ -19,3 +19,10 @@ export const getSdk = () => {
 
   return sdk
 }
+
+export const getNonce = async (sdk: Sdk, address?: string) => {
+  const nonce = (await sdk.common.getNonce({
+    address: address || sdk.options.account?.address!
+  })).nonce
+  return nonce
+}
