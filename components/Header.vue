@@ -1,12 +1,6 @@
 <script lang="ts" setup> 
 import { useAccountStore } from '../stores/account'
   const accountStore = useAccountStore()
-
-  const address = computed(() => accountStore.account?.address.replace(
-    accountStore.account.address.slice(5,-5),
-    '...'
-  ));
-
 </script>
 <template>
   <header class="p-3 bg-dark text-white">
@@ -21,16 +15,8 @@ import { useAccountStore } from '../stores/account'
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-        </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-        </form>
+        </ul>
 
         <div class="text-end">
           <button v-if="!accountStore.account" 
@@ -47,7 +33,7 @@ import { useAccountStore } from '../stores/account'
             </svg>
             <div class="me-2 mb-0 small lh-sm text-white d-flex justify-content-start flex-column">
               <strong class="text-start">{{accountStore.account?.email}}</strong>
-              <div class="text-white-50"> {{address}}</div>
+              <div class="text-white-50"> {{accountStore.account.address}}</div>
             </div>
             <button
               type="button" class="btn btn-secondary" 
