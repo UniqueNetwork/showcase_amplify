@@ -12,8 +12,8 @@ export interface IAccount {
 
 const ACCOUNT_STORAGE_KEY = 'amplify_local_account'
 
-export const useAccountStore = defineStore('account-store', () => {
-  const account = useStorage<IAccount>(
+export const useAccountStore = defineStore('account', () => {
+  const account = useStorage<IAccount | null>(
     ACCOUNT_STORAGE_KEY,
     null,
     localStorage,
@@ -38,8 +38,13 @@ export const useAccountStore = defineStore('account-store', () => {
     }
   }
 
+  const signOut = () => {
+    account.value = null
+  }
+
   return {
     account,
     signIn,
+    signOut,
   }
 })

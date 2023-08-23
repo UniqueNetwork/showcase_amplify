@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { useAccountStore } from '../stores/account'
+
+const emit = defineEmits<{
+  (e: 'sign-in', email: string): void
+}>()
 
 const email = ref('')
-
-const accountStore = useAccountStore()
-
-const signIn = () => {
-  accountStore.signIn(email.value)
-}
 
 const handleCredentialResponse = () => {
   //TODO: sign-in with google
@@ -49,19 +46,26 @@ onMounted(() => {
             <input type="email" class="form-control" id="floatingInput" v-model="email"  placeholder="name@example.com"/>
           </div>
           <div class="d-flex flex-wrap align-items-center justify-content-center" >
+            <div id="g_id_onload"
+              data-client_id="317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com"
+              data-context="signin"
+              data-ux_mode="popup"
+              data-callback="onSignUpDone"
+              data-auto_prompt="false">
+            </div>
             <div id="googleButton" class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
+              data-type="standard"
+              data-shape="rectangular"
+              data-theme="outline"
+              data-text="signin_with"
+              data-size="large"
+              data-logo_alignment="left">
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="signIn" data-bs-dismiss="modal">Submit</button>
+          <button type="button" class="btn btn-primary" @click="emit('signIn', email)" data-bs-dismiss="modal">Submit</button>
         </div>
       </div>
     </div>
