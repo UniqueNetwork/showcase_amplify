@@ -12,8 +12,14 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
+      script: [
+        { src: "https://accounts.google.com/gsi/client", defer: true, async: true }
+      ]
     }
   },
+  modules: [
+    '@pinia/nuxt',
+  ],
   runtimeConfig: {
     substrateAdminSeed: process.env.SUBSTRATE_ADMIN_SEED,
     public: {
@@ -32,6 +38,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  auth: {
+    strategies: {
+      google: {
+        clientId: '317606739923-pmhhbtc50cp20qa11ql9o1ba4kmbopah.apps.googleusercontent.com'
+      },
+    }
+  }
 })
 
 function warn(message: string, options: any) {
