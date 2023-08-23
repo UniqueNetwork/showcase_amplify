@@ -65,7 +65,12 @@ const followRequest = useAsyncData(async () => {
 
 const donateRequest = useAsyncData(async () => {
   if (!accountStore.account) return
-  // TODO: donate
+  const tokenId = followingsStore.following?.nftId
+  if (!tokenId) return
+  const response = await fetch(`/api/getSubscriptionRft?address=${accountStore.account.address}&tokenId=${tokenId}`)
+  const result = await response.json()
+  console.log(result)
+  return result
 }, {
   immediate: false,
 })
@@ -89,17 +94,16 @@ const fetchBundle = async (tokenId: number) => {
     bundle,
     followerFTBalance,
     nftBalance,
-  } 
+  }
   return bundle
 }
 
 if (accountStore.account && followingsStore.following) {
-  fetchBundle(followingsStore.following.nftId)  
+  fetchBundle(followingsStore.following.nftId)
 }
 
 const tokenImageUrl = computed(() => {
-  // @ts-ignore
-  return tokensStore.tokensInfo?.bundle.image.fullUrl
+  return ((tokensStore.tokensInfo?.bundle.image as any)?.fullUrl || '') as string
 })
 
 const ftAccountBalance = computed(() => {
@@ -121,7 +125,7 @@ const ftNestedBalance = computed(() => {
           <TokenCard
               :description="ftAccountBalance"
             />
-          <TokenCard 
+          <TokenCard
             :token-id="tokensStore.tokensInfo.bundle.tokenId"
             :image-url="tokenImageUrl"
             description="Follower Badge NFT"
@@ -151,12 +155,12 @@ const ftNestedBalance = computed(() => {
           </button>
           <button v-if="state === STATE.FOLLOWING"
             class="btn btn-warning btn-lg px-4 me-md-2" type="button"
-            @click="donateRequest.execute" :disabled="followRequest.status.value === 'pending'"
+            @click="donateRequest.execute" :disabled="donateRequest.status.value === 'pending'"
           >
             Donate for the month
           </button>
         </div>
-        
+
       </div>
     </div>
   </section>

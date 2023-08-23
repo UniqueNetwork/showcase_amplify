@@ -23,30 +23,27 @@ export default defineEventHandler(async (event) => {
     throw createError({statusCode: 400, statusText: 'Address is not valid',})
   }
 
-  console.log('before createArtistNFTForAddress')
   const result = await createArtistNFTForAddress(sdk, collectionId, sanitizedAddress)
-  console.log('after createArtistNFTForAddress', result)
 
   const nonce = await getNonce(sdk)
   const config = useRuntimeConfig()
   const ampxFtCollectionId = config.public.ampxFtCollectionId
 
-  console.log('before transferTokens')
+
   const [ftToUser, ftNested] = await Promise.all([
     sdk.fungible.transferTokens({
       collectionId: ampxFtCollectionId,
       from: sdk.options.account?.address!,
       recipient: sanitizedAddress,
-      amount: 500,
+      amount: 5,
     }, {nonce}),
     sdk.fungible.transferTokens({
       collectionId: ampxFtCollectionId,
       from: sdk.options.account?.address!,
       recipient: Address.nesting.idsToAddress(result.collectionId, result.tokenId),
-      amount: 500,
+      amount: 5,
     }, {nonce: nonce + 1}),
   ])
-  console.log('after transferTokens', ftToUser.parsed, ftNested.parsed)
 
   if (!ftToUser.parsed?.collectionId) {
     console.log('error on ftToUser', ftToUser.error)

@@ -68,8 +68,7 @@ export const createArtistNFTForAddress = async (sdk: Sdk, collectionId: number, 
 }
 
 export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, amount: 10000}) => {
-  const amount = options.decimals * options.amount
-  if (amount > Number.MAX_SAFE_INTEGER) {
+  if (options.amount > Number.MAX_SAFE_INTEGER) {
     // integer is the limitation of the SDK, it doesn't take bigint according to the typings
     throw new Error('amount is too big')
   }
@@ -102,7 +101,7 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
     sdk.fungible.addTokens(
       {
         collectionId,
-        amount,
+        amount: options.amount,
         recipient: address,
       },
       {nonce: nonce + 1}
@@ -114,7 +113,8 @@ export const createAmpxFTCollection = async (sdk: Sdk, options = {decimals: 2, a
 
   return {
     collectionId,
-    amount,
+    amount: options.amount,
+    decimals: options.decimals,
   }
 }
 
