@@ -1,7 +1,8 @@
-<script lang="ts" setup></script>
-
 <template>
-  <slot/>
+  <Header />
+  <main>
+    <slot/>
+  </main>
+  <Login />
 </template>
-
 <style scoped lang="scss"></style>
