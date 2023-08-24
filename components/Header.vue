@@ -1,6 +1,24 @@
 <script lang="ts" setup> 
-import { useAccountStore } from '../stores/account'
+  import { useAccountStore } from '~/stores/account'
+  import { useAlertStore } from '~/stores/alert'
   const accountStore = useAccountStore()
+  const alertStore = useAlertStore()
+
+  const copyPrivateKey = () => {
+    if (!accountStore.account) return;
+    navigator.clipboard.writeText(accountStore.account.private)
+    alertStore.showAlert({
+      text: 'Private key copied successfully',
+      severity: 'success'
+    })
+  }
+
+  const alertClass = computed(() => {
+    if (!alertStore.alert) return ''
+    const background = alertStore.alert.severity === 'success' ? 'bg-primary' : 'bg-danger'
+    return `${background} show`
+  })
+
 </script>
 <template>
   <header class="p-3 bg-dark text-white">
@@ -24,8 +42,11 @@ import { useAccountStore } from '../stores/account'
           >
             Sign-up
           </button>
-          <div v-if="!!accountStore.account" class="d-flex flex-wrap text-muted gap-2 align-items-center justify-content-start">
-            <div class="d-flex text-muted gap-2 align-items-center justify-content-start">
+          <div v-if="!!accountStore.account" class="dropdown">
+            <div 
+              class="dropdown-toggle d-flex text-muted gap-2 align-items-center justify-content-start" 
+              data-bs-toggle="dropdown" aria-expanded="false"
+            >
               <svg class="bd-placeholder-img flex-shrink-0 rounded" width="32" height="32" 
                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" 
                 preserveAspectRatio="xMidYMid slice" focusable="false">
@@ -39,25 +60,53 @@ import { useAccountStore } from '../stores/account'
                   </div>
                 </div>
               </div>
+              <div>
+                <a class="dropdown-toggle " />
+              </div>
             </div>
-            <button
-              type="button" class="btn btn-secondary col-12 col-md-auto" 
-              @click="accountStore.signOut"
-            >
-              Log out
-            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item" href="#" @click="copyPrivateKey">Copy private key</a></li>
+              <li><a class="dropdown-item" href="#" @click="accountStore.signOut">Log out</a></li>
+            </ul>
           </div>
-          
-
         </div>
       </div>
     </div>
   </header>
+  <div class="alert-container" >
+    <div :class="alertClass" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ alertStore.alert?.text }}
+        </div>
+        <!-- <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button> -->
+      </div>
+    </div>
+  </div>
 </template>
 <style scoped lang="scss">
 .vw-sm-100 {
   @media screen and (max-width: 578px) {
     width: calc(100vw - 76px);
   }
+}
+.dropdown {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  a.dropdown-toggle:after {
+    color: var(--bs-light);
+  }
+  .dropdown-menu {
+    z-index: 9999;
+  }
+}
+.alert-container {
+  position: fixed;
+  margin-top: 8px;
+  right: 8px;
+  z-index: 999;
 }
 </style>

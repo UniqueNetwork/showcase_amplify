@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useAccountStore } from '~/stores/account'
 import { useFollowingsStore } from '~/stores/follow';
 import { useTokensInfoStore } from '~/stores/tokens';
+import { useAlertStore } from '~/stores/alert';
 import { useUniqueSdk } from '~/composables/useUniqueSdk'
 import { Address } from '@unique-nft/utils';
 
@@ -24,6 +25,7 @@ const state = ref(STATE.NOT_LOGGED_IN)
 const accountStore = useAccountStore()
 const followingsStore = useFollowingsStore()
 const tokensStore = useTokensInfoStore()
+const alertStore = useAlertStore()
 
 onMounted(() => {
   if (accountStore.account) {
@@ -61,6 +63,8 @@ const followRequest = useAsyncData(async () => {
   if (!accountStore.account) return
   const response = await fetch(`/api/getArtistNft?address=${accountStore.account.address}`)
   const result = await response.json()
+  if(!response.ok) throw new Error(result.statusMessage || response.statusText)
+  if(!result?.nft?.tokenId) return
   followingsStore.following = {
     nftId: result.nft.tokenId,
   }
@@ -77,10 +81,25 @@ const donateRequest = useAsyncData(async () => {
   if (!tokenId) return
   const response = await fetch(`/api/getSubscriptionRft?address=${accountStore.account.address}&tokenId=${tokenId}`)
   const result = await response.json()
+  if(!response.ok) throw new Error(result.statusMessage || response.statusText)
   await fetchBundle(tokenId)
   return result
 }, {
   immediate: false,
+})
+
+watch(followRequest.status, () => {
+  followRequest.status.value === 'error' && alertStore.showAlert({
+    text: followRequest.error.value?.message || 'Unhandled error',
+    severity: 'error',
+  })
+})
+
+watch(donateRequest.status, () => {
+  donateRequest.status.value === 'error' && alertStore.showAlert({
+    text: donateRequest.error.value?.message || 'Unhandled error',
+    severity: 'error',
+  })
 })
 
 const fetchBundle = async (tokenId: number) => {

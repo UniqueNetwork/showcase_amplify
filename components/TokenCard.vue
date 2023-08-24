@@ -23,9 +23,9 @@ import { useTokensInfoStore } from '~/stores/tokens';
   const tokenName = computed(() => {
     switch (props.collectionId) {
       case artistNftCollectionId:
-        return `Artist NFT [ID ${props.tokenId}]`
+        return `Artist NFT`
       case followingRftCollectionId:
-        return `Following RFT [ID ${props.tokenId}]`
+        return `Following RFT`
       case ampxFtCollectionId:
         return 'AMPX FT Collection'
       default:
