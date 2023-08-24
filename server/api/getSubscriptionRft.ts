@@ -2,7 +2,7 @@ import {getNonce, getSdk} from '~/minter/utils'
 import * as dotenv from 'dotenv'
 import {createError} from 'h3'
 import {createArtistNFTForAddress} from '~/minter/minters'
-import {Address} from '@unique-nft/utils/address'
+import {Address} from '@unique-nft/utils'
 
 dotenv.config()
 

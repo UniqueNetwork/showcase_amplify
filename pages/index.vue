@@ -4,7 +4,7 @@ import { useAccountStore } from '~/stores/account'
 import { useFollowingsStore } from '~/stores/follow';
 import { useTokensInfoStore } from '~/stores/tokens';
 import { useUniqueSdk } from '~/composables/useUniqueSdk'
-import { Address } from '@unique-nft/utils/address';
+import { Address } from '@unique-nft/utils';
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -45,8 +45,8 @@ watch(accountStore, () => {
 })
 
 watch(tokensStore, () => {
-  if (followingsStore.following && 
-     accountStore.account && 
+  if (followingsStore.following &&
+     accountStore.account &&
      tokensStore.tokensInfo &&
      tokensStore.tokensInfo?.bundle.nestingChildTokens.length > 1) {
     state.value = STATE.FOLLOWING_AND_PAID
