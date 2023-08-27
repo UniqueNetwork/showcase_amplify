@@ -1,6 +1,6 @@
-import { useStorage } from '@vueuse/core'
-import { defineStore } from 'pinia'
-import { Wallet, utils } from 'ethers';
+import {useStorage} from '@vueuse/core'
+import {defineStore} from 'pinia'
+import {Wallet, utils} from 'ethers';
 
 export interface IAccount {
   address: string;
@@ -16,7 +16,7 @@ export const useAccountStore = defineStore('account', () => {
     ACCOUNT_STORAGE_KEY,
     null,
     localStorage,
-    { 
+    {
       serializer: {
         read: (v: any) => v ? JSON.parse(v) : null,
         write: (v: any) => JSON.stringify(v),
@@ -25,7 +25,7 @@ export const useAccountStore = defineStore('account', () => {
   )
 
   const signIn = (email: string) => {
-    const { address, mnemonic, privateKey } = Wallet.fromMnemonic(
+    const {address, mnemonic, privateKey} = Wallet.fromMnemonic(
       utils.entropyToMnemonic(utils.randomBytes(32))
     )
 

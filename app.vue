@@ -2,9 +2,9 @@
 </script>
 
 <template>
-  <ClientOnly>
+  <div>
     <NuxtLayout>
       <NuxtPage/>
     </NuxtLayout>
-  </ClientOnly>
+  </div>
 </template>

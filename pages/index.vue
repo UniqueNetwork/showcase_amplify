@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { useAccountStore } from '~/stores/account'
-import { useFollowingsStore } from '~/stores/follow';
-import { useTokensInfoStore } from '~/stores/tokens';
-import { useAlertStore } from '~/stores/alert';
-import { useUniqueSdk } from '~/composables/useUniqueSdk'
-import { Address } from '@unique-nft/utils';
+import {onMounted, ref} from 'vue'
+import {useAccountStore} from '~/stores/account'
+import {useFollowingsStore} from '~/stores/follow';
+import {useTokensInfoStore} from '~/stores/tokens';
+import {useAlertStore} from '~/stores/alert';
+import {useUniqueSdk} from '~/composables/useUniqueSdk'
+import {Address} from '@unique-nft/utils';
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -48,9 +48,9 @@ watch(accountStore, () => {
 
 watch(tokensStore, () => {
   if (followingsStore.following &&
-     accountStore.account &&
-     tokensStore.tokensInfo &&
-     tokensStore.tokensInfo?.bundle.nestingChildTokens.length > 1) {
+    accountStore.account &&
+    tokensStore.tokensInfo &&
+    tokensStore.tokensInfo?.bundle.nestingChildTokens.length > 1) {
     state.value = STATE.FOLLOWING_AND_PAID
     return;
   }
@@ -63,12 +63,16 @@ const followRequest = useAsyncData(async () => {
   if (!accountStore.account) return
   const response = await fetch(`/api/getArtistNft?address=${accountStore.account.address}`)
   const result = await response.json()
-  if(!response.ok) throw new Error(result.statusMessage || response.statusText)
-  if(!result?.nft?.tokenId) return
+  if (!response.ok) throw new Error(result.statusMessage || response.statusText)
+  if (!result?.nft?.tokenId) return
   followingsStore.following = {
     nftId: result.nft.tokenId,
   }
   state.value = STATE.FOLLOWING
+  alertStore.showAlert({
+    text: 'You are now following Marco Brun!\nPlease look at your Following NFT Badge!',
+    severity: 'success',
+  })
   await fetchBundle(result.nft.tokenId)
   return result
 }, {
@@ -81,7 +85,11 @@ const donateRequest = useAsyncData(async () => {
   if (!tokenId) return
   const response = await fetch(`/api/getSubscriptionRft?address=${accountStore.account.address}&tokenId=${tokenId}`)
   const result = await response.json()
-  if(!response.ok) throw new Error(result.statusMessage || response.statusText)
+  if (!response.ok) throw new Error(result.statusMessage || response.statusText)
+  alertStore.showAlert({
+    text: 'You have successfully donated for the month!\nSpecial RFT Badge has been added to your Following NFT Badge!',
+    severity: 'success',
+  })
   await fetchBundle(tokenId)
   return result
 }, {
@@ -135,12 +143,50 @@ if (accountStore.account && followingsStore.following) {
 </script>
 
 <template>
-  <Header />
+
   <section class="container px-4 py-5">
-    <div class="row flex-lg-row-reverse align-items-start g-5 py-5">
-      <div class="col-10 col-sm-8 col-lg-6">
-        <img src="https://ipfs.uniquenetwork.dev/ipfs/Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
-        <div v-if="!!tokensStore.tokensInfo" class="mt-5 d-flex flex-column gap-2" >
+    <div class="row flex-md-row-reverse align-items-start g-5 py-5">
+      <div class="col-md-4 col-12 pt-2" >
+        <img
+          src="https://ipfs.uniquenetwork.dev/ipfs/Qmd8unFnubfYyUSHzPtSBD7SmYgqyaQ5DXSVA1ocCQ8HKw"
+          class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
+          width="400" height="500" loading="lazy"
+        >
+      </div>
+      <div class="col-md-8 col-12">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Marco Brun</h1>
+        <p class="lead">
+          Marco Brun, a mystique-laden artist, blends abstract expressionism and
+          surrealism in his captivating paintings. His enigmatic identity adds to the allure
+          as his vibrant canvases, a fusion of colors and intricate details,
+          unravel emotional narratives that defy norms and beckon us to delve into boundless imagination.
+        </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <button v-if="state === STATE.NOT_LOGGED_IN"
+                  class="btn btn-warning btn-lg px-4 me-md-2" type="button"
+                  data-bs-toggle="modal" data-bs-target="#loginModal"
+          >
+            Sign-up for follow
+          </button>
+          <button v-if="state === STATE.NOT_FOLLOWING"
+                  class="btn btn-warning btn-lg px-4 me-md-2" type="button"
+                  @click="followRequest.execute" :disabled="followRequest.status.value === 'pending'"
+          >
+            <div v-if="followRequest.status.value === 'pending'" class="spinner-border spinner-border-sm"
+                 role="status"></div>
+            Follow
+          </button>
+          <button v-if="state === STATE.FOLLOWING && tokensStore.tokensInfo"
+                  class="btn btn-warning btn-lg px-4 me-md-2" type="button"
+                  @click="donateRequest.execute" :disabled="donateRequest.status.value === 'pending'"
+          >
+            <div v-if="donateRequest.status.value === 'pending'" class="spinner-border spinner-border-sm"
+                 role="status"></div>
+            Donate for the month
+          </button>
+        </div>
+
+        <div v-if="!!tokensStore.tokensInfo" class="mt-2 d-flex flex-column gap-2">
           <h4>Own tokens</h4>
           <TokenCard
             v-if="tokensStore.tokensInfo?.followerFTBalance"
@@ -164,62 +210,38 @@ if (accountStore.account && followingsStore.following) {
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-6">
-        <h1 class="display-5 fw-bold lh-1 mb-3">Marco Brun</h1>
-        <p class="lead">Marko Brun, a name that ignites curiosity and wonder, is an artist whose work resides at the intersection of abstract expressionism and surrealism. With an aura of mystery surrounding his identity, Bruno's captivating paintings invite viewers into a world where colors and shapes converse in a dance of emotion. Each canvas presents a puzzle, where vibrant hues coalesce with intricate details, prompting contemplation of the deeper narrative beneath. Bruno's artistry, though shrouded in enigma, leaves an indelible impression that challenges artistic conventions and invites us to explore the limitless realm of imagination.</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <button v-if="state === STATE.NOT_LOGGED_IN"
-            class="btn btn-warning btn-lg px-4 me-md-2" type="button"
-            data-bs-toggle="modal" data-bs-target="#loginModal"
-          >
-            Sign-up for follow
-          </button>
-          <button v-if="state === STATE.NOT_FOLLOWING"
-            class="btn btn-warning btn-lg px-4 me-md-2" type="button"
-            @click="followRequest.execute" :disabled="followRequest.status.value === 'pending'"
-          >
-            <div v-if="followRequest.status.value === 'pending'" class="spinner-border spinner-border-sm" role="status"></div>
-            Follow
-          </button>
-          <button v-if="state === STATE.FOLLOWING && tokensStore.tokensInfo"
-            class="btn btn-warning btn-lg px-4 me-md-2" type="button"
-            @click="donateRequest.execute" :disabled="donateRequest.status.value === 'pending'"
-          >
-            <div v-if="donateRequest.status.value === 'pending'" class="spinner-border spinner-border-sm" role="status"></div>
-            Donate for the month
-          </button>
-        </div>
+
       </div>
     </div>
   </section>
-  <Login @sign-in="accountStore.signIn" />
 </template>
 
 <style scoped lang="scss">
-  .child-token{
-    position: relative;
+.child-token {
+  position: relative;
+
+  &:before {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 50%;
+    margin-left: -12px;
+    background: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    border-bottom-left-radius: calc(var(--bs-border-radius-lg) / 2);
+    border-color: var(--bs-gray-400);
+  }
+
+  &:not(:first-child) {
     &:before {
-      content: "";
-      display: block;
-      width: 6px;
-      height: 50%;
-      margin-left: -12px;
-      background: rgba(255, 255, 255, 0.1);
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      border-left: 1px solid;
-      border-bottom: 1px solid;
-      border-bottom-left-radius: calc(var(--bs-border-radius-lg) / 2);
-      border-color: var(--bs-gray-400);
-    }
-    &:not(:first-child) {
-      &:before {
-        height: 100%;
-        top: -50%;
-      }
+      height: 100%;
+      top: -50%;
     }
   }
+}
 </style>

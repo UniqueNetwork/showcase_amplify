@@ -38,6 +38,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  routeRules: {
+    '/': {ssr: false},
+  }
 })
 
 function warn(message: string, options: any) {

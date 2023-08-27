@@ -12,7 +12,7 @@ export const useFollowingsStore = defineStore('followings', () => {
     FOLLOWINGS_STORAGE_KEY,
     null,
     localStorage,
-    { 
+    {
       serializer: {
         read: (v: any) => v ? JSON.parse(v) : null,
         write: (v: any) => JSON.stringify(v),
