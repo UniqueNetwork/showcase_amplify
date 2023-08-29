@@ -23,17 +23,14 @@
 <template>
   <header class="p-3 bg-dark text-white">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+      <div class="d-flex align-items-center justify-content-center px-0 px-sm-2 justify-content-between">
+        <a href="/" class="d-flex align-items-center mb-0 text-white text-decoration-none">
           <svg class="bd-placeholder-img flex-shrink-0 rounded me-4" width="32" height="32"
             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
             preserveAspectRatio="xMidYMid slice" focusable="false">
             <circle cx="50%" cy="50%" r="50%" width="100%" height="100%" fill="#FFCA2B"></circle>
           </svg>
         </a>
-
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        </ul>
 
         <div class="col-12 col-lg-auto">
           <button v-if="!accountStore.account"
@@ -60,9 +57,6 @@
                   </div>
                 </div>
               </div>
-              <div>
-                <a class="dropdown-toggle " />
-              </div>
             </div>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
               <li><a class="dropdown-item" href="#" @click="copyPrivateKey">Copy private key</a></li>
@@ -87,7 +81,7 @@
 <style scoped lang="scss">
 .vw-sm-100 {
   @media screen and (max-width: 578px) {
-    width: calc(100vw - 76px);
+    width: calc(100vw - 156px);
   }
 }
 .dropdown {
@@ -96,7 +90,7 @@
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
-  a.dropdown-toggle:after {
+  div.dropdown-toggle:after {
     color: var(--bs-light);
   }
   .dropdown-menu {
